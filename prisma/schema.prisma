@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model benefits {
+  job_id   BigInt
+  inferred Boolean
+  type     String  @db.VarChar(50)
+  job      job     @relation(fields: [job_id], references: [job_id], onDelete: NoAction, onUpdate: NoAction, map: "benefits_fk0")
+
+  @@id([job_id, type])
+}
+
+model company {
+  company_id           BigInt                @id
+  name                 String?               @db.VarChar(255)
+  country              String?               @db.VarChar(2)
+  state                String?               @db.VarChar(255)
+  city                 String?               @db.VarChar(255)
+  company_descriptions company_descriptions?
+  company_industry     company_industry[]
+  job_company          job_company[]
+}
+
+model company_descriptions {
+  company_id  BigInt  @id
+  description String  @db.VarChar(2500)
+  company     company @relation(fields: [company_id], references: [company_id], onDelete: NoAction, onUpdate: NoAction, map: "company_descriptions_fk0")
+}
+
+model company_industry {
+  company_id    BigInt
+  industry_name String  @db.VarChar(100)
+  company       company @relation(fields: [company_id], references: [company_id], onDelete: NoAction, onUpdate: NoAction, map: "company_industry_fk0")
+
+  @@id([company_id, industry_name])
+}
+
+model job {
+  job_id                     BigInt         @id
+  title                      String         @db.VarChar(255)
+  location                   String         @db.VarChar(255)
+  formatted_work_type        String         @db.VarChar(15)
+  remote_allowed             Boolean
+  application_type           String         @db.VarChar(20)
+  formatted_experience_level String         @db.VarChar(20)
+  benefits                   benefits[]
+  job_company                job_company[]
+  job_industry               job_industry[]
+  job_skills                 job_skills[]
+  salaries                   salaries[]
+}
+
+model job_company {
+  job_id     BigInt
+  company_id BigInt
+  job        job     @relation(fields: [job_id], references: [job_id], onDelete: NoAction, onUpdate: NoAction, map: "job_company_fk0")
+  company    company @relation(fields: [company_id], references: [company_id], onDelete: NoAction, onUpdate: NoAction, map: "job_company_fk1")
+
+  @@id([job_id, company_id])
+}
+
+model job_industry {
+  job_id        BigInt
+  industry_name String @db.VarChar(75)
+  job           job    @relation(fields: [job_id], references: [job_id], onDelete: NoAction, onUpdate: NoAction, map: "job_industry_fk0")
+
+  @@id([job_id, industry_name])
+}
+
+model job_skills {
+  job_id     BigInt
+  skill_name String @db.VarChar(30)
+  job        job    @relation(fields: [job_id], references: [job_id], onDelete: NoAction, onUpdate: NoAction, map: "job_skills_fk0")
+
+  @@id([job_id, skill_name])
+}
+
+model salaries {
+  salary_id          BigInt @id
+  job_id             BigInt
+  max_salary         Float?
+  med_salary         Float?
+  min_salary         Float?
+  pay_period         String @db.VarChar(10)
+  currency           String @db.VarChar(3)
+  monthly_max_salary Float?
+  monthly_med_salary Float?
+  monthly_min_salary Float?
+  job                job    @relation(fields: [job_id], references: [job_id], onDelete: NoAction, onUpdate: NoAction, map: "salaries_fk1")
+}
