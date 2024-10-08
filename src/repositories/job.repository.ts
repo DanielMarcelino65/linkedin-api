@@ -15,10 +15,9 @@ export class JobRepository {
       select: {
         type: true,
       },
-      distinct: ['type'], // Obtém valores únicos
+      distinct: ['type'],
     });
 
-    // Retorna apenas os valores de `benefit_name`
     return benefitsType.map((benefit) => benefit.type);
   }
 
@@ -28,10 +27,9 @@ export class JobRepository {
         location: true,
       },
       orderBy: { location: 'asc' },
-      distinct: ['location'], // Obtém valores únicos
+      distinct: ['location'],
     });
 
-    // Retorna apenas os valores de `location`
     return locationType.map((location) => location.location);
   }
 
@@ -40,15 +38,18 @@ export class JobRepository {
       select: {
         skill_name: true,
       },
-      distinct: ['skill_name'], // Obtém valores únicos
+      distinct: ['skill_name'],
     });
 
-    // Retorna apenas os valores de `skill_name`
     return jobSkillsType.map((skill) => skill.skill_name);
   }
 
   async getJobs(): Promise<JobEntity[]> {
-    const jobs = await this.prisma.job.findMany({ take: 100 });
+    const jobs = await this.prisma.job.findMany({
+      take: 200,
+      orderBy: { job_id: 'desc' },
+      include: { job_skills: true, salaries: true },
+    });
     return jobs;
   }
 
