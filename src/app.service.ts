@@ -29,4 +29,8 @@ export class AppService {
   getHello(): string {
     return 'Hello World!';
   }
+
+  getPayPeriodType() {
+    return this.jobRepository.getPayPeriodType();
+  }
 }

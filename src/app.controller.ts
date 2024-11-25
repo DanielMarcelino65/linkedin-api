@@ -6,6 +6,11 @@ import { FilterDto } from './dto/filter.dto';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @Get('payperiodtypes')
+  getPayPeriodType() {
+    return this.appService.getPayPeriodType();
+  }
+
   @Get('locationtypes')
   getLocationType() {
     return this.appService.getLocationType();

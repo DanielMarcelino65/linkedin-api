@@ -33,6 +33,17 @@ export class JobRepository {
     return locationType.map((location) => location.location);
   }
 
+  async getPayPeriodType(): Promise<string[]> {
+    const payPeriodType = await this.prisma.salaries.findMany({
+      select: {
+        pay_period: true,
+      },
+      distinct: ['pay_period'],
+    });
+
+    return payPeriodType.map((payPeriod) => payPeriod.pay_period);
+  }
+
   async getJobSkillsType(): Promise<string[]> {
     const jobSkillsType = await this.prisma.job_skills.findMany({
       select: {
