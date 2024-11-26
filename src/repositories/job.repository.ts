@@ -29,7 +29,7 @@ export class JobRepository {
   }
 
   /**
-   * @descriptionc Método que retorna os todos os tipos de localizações
+   * @description Método que retorna os todos os tipos de localizações
    * @returns Um array de strings com os tipos de localizações
    *
    */
