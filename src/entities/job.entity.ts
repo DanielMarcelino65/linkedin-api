@@ -1,5 +1,8 @@
 import { job } from '@prisma/client';
 
+/**
+ * @description Entidade que representa a tabela de trabalhos
+ */
 export class JobEntity implements job {
   job_id: bigint;
   title: string;

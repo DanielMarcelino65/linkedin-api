@@ -1,5 +1,8 @@
 import { salaries } from '@prisma/client';
 
+/**
+ * @description Entidade que representa a tabela de salários
+ */
 export class SalariesEntity implements salaries {
   salary_id: bigint;
   job_id: bigint;

@@ -7,15 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//Tabela de benefícios
 model benefits {
   job_id   BigInt
   inferred Boolean
   type     String  @db.VarChar(50)
-  job      job     @relation(fields: [job_id], references: [job_id], onDelete: NoAction, onUpdate: NoAction, map: "benefits_fk0")
+  job      job     @relation(fields: [job_id], references: [job_id], onDelete: Cascade, onUpdate: Cascade, map: "benefits_fk0")
 
   @@id([job_id, type])
 }
 
+//Tabela de empresas
 model company {
   company_id           BigInt                @id
   name                 String?               @db.VarChar(255)
@@ -27,20 +29,23 @@ model company {
   job_company          job_company[]
 }
 
+//Tabela intermediária entre empresas e descrições
 model company_descriptions {
   company_id  BigInt  @id
   description String  @db.VarChar(2500)
-  company     company @relation(fields: [company_id], references: [company_id], onDelete: NoAction, onUpdate: NoAction, map: "company_descriptions_fk0")
+  company     company @relation(fields: [company_id], references: [company_id], onDelete: Cascade, onUpdate: Cascade, map: "company_descriptions_fk0")
 }
 
+//Tabela intermediária entre empresas e indústrias
 model company_industry {
   company_id    BigInt
   industry_name String  @db.VarChar(100)
-  company       company @relation(fields: [company_id], references: [company_id], onDelete: NoAction, onUpdate: NoAction, map: "company_industry_fk0")
+  company       company @relation(fields: [company_id], references: [company_id], onDelete: Cascade, onUpdate: Cascade, map: "company_industry_fk0")
 
   @@id([company_id, industry_name])
 }
 
+//Tabela de trabalhos
 model job {
   job_id                     BigInt         @id
   title                      String         @db.VarChar(255)
@@ -56,31 +61,35 @@ model job {
   salaries                   salaries[]
 }
 
+//Tabela intermediária entre trabalhos e empresas
 model job_company {
   job_id     BigInt
   company_id BigInt
-  job        job     @relation(fields: [job_id], references: [job_id], onDelete: NoAction, onUpdate: NoAction, map: "job_company_fk0")
-  company    company @relation(fields: [company_id], references: [company_id], onDelete: NoAction, onUpdate: NoAction, map: "job_company_fk1")
+  job        job     @relation(fields: [job_id], references: [job_id], onDelete: Cascade, onUpdate: Cascade, map: "job_company_fk0")
+  company    company @relation(fields: [company_id], references: [company_id], onDelete: Cascade, onUpdate: Cascade, map: "job_company_fk1")
 
   @@id([job_id, company_id])
 }
 
+//Tabela intermediária entre trabalhos e indústrias
 model job_industry {
   job_id        BigInt
   industry_name String @db.VarChar(75)
-  job           job    @relation(fields: [job_id], references: [job_id], onDelete: NoAction, onUpdate: NoAction, map: "job_industry_fk0")
+  job           job    @relation(fields: [job_id], references: [job_id], onDelete: Cascade, onUpdate: Cascade, map: "job_industry_fk0")
 
   @@id([job_id, industry_name])
 }
 
+//Tabela intermediária entre trabalhos e habilidades
 model job_skills {
   job_id     BigInt
   skill_name String @db.VarChar(30)
-  job        job    @relation(fields: [job_id], references: [job_id], onDelete: NoAction, onUpdate: NoAction, map: "job_skills_fk0")
+  job        job    @relation(fields: [job_id], references: [job_id], onDelete: Cascade, onUpdate: Cascade, map: "job_skills_fk0")
 
   @@id([job_id, skill_name])
 }
 
+//Tabela de salários
 model salaries {
   salary_id          BigInt @id
   job_id             BigInt
@@ -92,5 +101,5 @@ model salaries {
   monthly_max_salary Float?
   monthly_med_salary Float?
   monthly_min_salary Float?
-  job                job    @relation(fields: [job_id], references: [job_id], onDelete: NoAction, onUpdate: NoAction, map: "salaries_fk1")
+  job                job    @relation(fields: [job_id], references: [job_id], onDelete: Cascade, onUpdate: Cascade, map: "salaries_fk1")
 }
